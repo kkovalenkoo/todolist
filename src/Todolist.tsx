@@ -1,14 +1,16 @@
-import React, {KeyboardEvent, ChangeEvent, useState} from 'react'
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
 import {FilterType, TaskType} from './App'
 
 type TodolistPropsType = {
+    todolistId: string
     title: string
     filter: FilterType
     tasks: TaskType[]
-    addTask: (newTaskTitle: string) => void
-    removeTask: (taskId: string) => void
-    changeFilter: (filterValue: FilterType) => void
-    changeTaskStatus: (id: string, isDone: boolean) => void
+    addTask: (newTaskTitle: string, todolistId: string) => void
+    removeTask: (taskId: string, todolistId: string) => void
+    changeFilter: (filterValue: FilterType, todolistId: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
+    removeTodolist: (todolistId: string) => void
 }
 
 export function Todolist(props: TodolistPropsType) {
@@ -17,8 +19,8 @@ export function Todolist(props: TodolistPropsType) {
     const [error, setError] = useState<string | null>(null)
 
     const onAddTask = () => {
-        if(title.trim() != '') {
-            props.addTask(title)
+        if (title.trim() != '') {
+            props.addTask(title, props.todolistId)
             setTitle('')
         } else {
             setError('Title is required')
@@ -34,22 +36,24 @@ export function Todolist(props: TodolistPropsType) {
         }
     }
     const onClickAll = () => {
-        props.changeFilter('all')
+        props.changeFilter('all', props.todolistId)
     }
     const onClickActive = () => {
-        props.changeFilter('active')
+        props.changeFilter('active', props.todolistId)
     }
     const onClickCompleted = () => {
-        props.changeFilter('completed')
+        props.changeFilter('completed', props.todolistId)
     }
 
-    const isIllumButtonAll = props.filter === 'all' ? 'active-filter' : ''
-    const isIllumButtonActive = props.filter === 'active' ? 'active-filter' : ''
-    const isIllumButtonComplete = props.filter === 'completed' ? 'active-filter' : ''
+    const isShowButtonAll = props.filter === 'all' ? 'active-filter' : ''
+    const isShowButtonActive = props.filter === 'active' ? 'active-filter' : ''
+    const isShowButtonComplete = props.filter === 'completed' ? 'active-filter' : ''
 
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>{props.title}
+                <button onClick={() => props.removeTodolist(props.todolistId)}>x</button>
+            </h3>
             <div>
                 <input value={title} onChange={onChangeTitle} onKeyPress={onKeyPress}/>
                 <button onClick={onAddTask}>+</button>
@@ -60,10 +64,10 @@ export function Todolist(props: TodolistPropsType) {
                     props.tasks.map(t => {
 
                         const onRemoveTask = () => {
-                            props.removeTask(t.id)
+                            props.removeTask(t.id, props.todolistId)
                         }
                         const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
-                            props.changeTaskStatus(t.id, e.currentTarget.checked)
+                            props.changeTaskStatus(t.id, e.currentTarget.checked, props.todolistId)
                         }
 
                         return (
@@ -77,9 +81,9 @@ export function Todolist(props: TodolistPropsType) {
                 }
             </ul>
             <div>
-                <button className={isIllumButtonAll} onClick={onClickAll}>All</button>
-                <button className={isIllumButtonActive} onClick={onClickActive}>Active</button>
-                <button className={isIllumButtonComplete} onClick={onClickCompleted}>Completed</button>
+                <button className={isShowButtonAll} onClick={onClickAll}>All</button>
+                <button className={isShowButtonActive} onClick={onClickActive}>Active</button>
+                <button className={isShowButtonComplete} onClick={onClickCompleted}>Completed</button>
             </div>
         </div>
     )
