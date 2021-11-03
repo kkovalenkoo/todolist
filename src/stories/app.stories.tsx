@@ -1,7 +1,7 @@
 import React from 'react'
-import {Meta, Story} from '@storybook/react'
 import App from '../App'
-import {ReduxStoreProviderDecorator} from './ReduxStoreProviderDecorator'
+import {ReduxStoreProviderDecorator} from './redux-store-provider-decorator'
+import {Meta, Story} from '@storybook/react'
 
 export default {
     title: 'Todolists/App',
