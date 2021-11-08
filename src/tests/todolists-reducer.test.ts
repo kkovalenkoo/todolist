@@ -3,10 +3,11 @@ import {
     addTodolistAC, changeTodolistFilterAC,
     changeTodolistTitleAC,
     FilterValuesType,
-    removeTodolistAC,
+    removeTodolistAC, setTodolistsAC,
     TodolistDomainType,
     todolistsReducer
-} from '../state/todolists-reducer'
+} from '../features/TodolistsList/todolists-reducer'
+import {tasksReducer} from '../features/TodolistsList/tasks-reducer'
 
 let todolistId1: string
 let todolistId2: string
@@ -29,12 +30,18 @@ test('correct todolist should be removed', () => {
 })
 
 test('correct todolist should be added', () => {
-    let newTodolistTitle = 'New Todolist'
+    const newTodolistTitle = {
+        id: v1(),
+        title: 'What to learn',
+        order: 0,
+        addedDate: ''
+    }
+    const action = addTodolistAC(newTodolistTitle)
 
-    const endState = todolistsReducer(startState, addTodolistAC(newTodolistTitle))
+    const endState = todolistsReducer(startState, action)
 
     expect(endState.length).toBe(3)
-    expect(endState[0].title).toBe(newTodolistTitle)
+    expect(endState[0].title).toBe(newTodolistTitle.title)
     expect(endState[0].filter).toBe('all')
 })
 
@@ -58,5 +65,30 @@ test('correct filter of todolist should be changed', () => {
 
     expect(endState[0].filter).toBe('all')
     expect(endState[1].filter).toBe(newFilter)
+})
+
+test('todolist should be set to the state', () => {
+
+    let action = setTodolistsAC(startState)
+
+    let endState = todolistsReducer([], action)
+
+    expect(endState.length).toBe(2)
+})
+
+test('empty array should be added when we set todolists', () => {
+    const action = setTodolistsAC([
+        {id: '1', title: 'title 1', order: 0, addedDate: ''},
+        {id: '2', title: 'title 2', order: 0, addedDate: ''}
+    ])
+
+    const endState = tasksReducer({}, action)
+
+    const keys = Object.keys(endState)
+
+    expect(keys.length).toBe(2)
+    expect(endState['1']).toBeDefined()
+    expect(endState['2']).toBeDefined()
+
 })
 
