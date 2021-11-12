@@ -1,0 +1,9 @@
+.appBarWrapper {
+    position: relative
+}
+
+.linearProgress {
+    position: absolute;
+    width: 100%;
+
+}
