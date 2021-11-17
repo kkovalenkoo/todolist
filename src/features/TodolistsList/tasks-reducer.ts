@@ -1,4 +1,4 @@
-import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../api/todolists-api'
+import {taskAPI, TaskPriorities, TaskStatuses, TaskType, todolistAPI, UpdateTaskModelType} from '../../api/api'
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from './todolists-reducer'
 import {Dispatch} from 'redux'
 import {AppRootStateType} from '../../app/store'
@@ -57,7 +57,7 @@ export const setTasksAC = (tasks: TaskType[], todolistId: string) => ({
 //Thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistsAPI.getTasks(todolistId)
+    taskAPI.getTasks(todolistId)
         .then(res => {
             dispatch(setAppStatusAC('succeeded'))
             dispatch(setTasksAC(res.data.items, todolistId))
@@ -65,7 +65,7 @@ export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
 }
 export const addTaskTC = (todolistId: string, taskTitle: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistsAPI.createTask(todolistId, taskTitle)
+    taskAPI.createTask(todolistId, taskTitle)
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(setAppStatusAC('succeeded'))
@@ -79,7 +79,7 @@ export const addTaskTC = (todolistId: string, taskTitle: string) => (dispatch: D
         })
 }
 export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: Dispatch) => {
-    return todolistsAPI.deleteTask(todolistId, taskId)
+    return taskAPI.deleteTask(todolistId, taskId)
         .then(() => dispatch(removeTaskAC(todolistId, taskId)))
 }
 export const updateTaskTC = (todolistId: string, taskId: string, domainModel: UpdateDomainTaskType) =>
@@ -96,7 +96,7 @@ export const updateTaskTC = (todolistId: string, taskId: string, domainModel: Up
                 deadline: task.deadline,
                 ...domainModel
             }
-            todolistsAPI.updateTask(todolistId, taskId, apiModel)
+            taskAPI.updateTask(todolistId, taskId, apiModel)
                 .then((res) => {
                     if (res.data.resultCode === 0) dispatch(updateTaskAC(todolistId, taskId, domainModel))
                     else {

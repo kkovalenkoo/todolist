@@ -5,7 +5,7 @@ import {v1} from 'uuid'
 import {tasksReducer} from '../features/TodolistsList/tasks-reducer'
 import {todolistsReducer} from '../features/TodolistsList/todolists-reducer'
 import {AppRootStateType} from '../app/store'
-import {TaskPriorities, TaskStatuses} from '../api/todolists-api'
+import {TaskPriorities, TaskStatuses} from '../api/api'
 import {appReducer} from '../app/app-reducer'
 import thunkMiddleware from 'redux-thunk'
 
@@ -49,6 +49,10 @@ const initialGlobalState = {
     app: {
         status: 'idle',
         error: null,
+        isInitialized: false
+    },
+    auth: {
+        isLoggedIn: false
     }
 }
 

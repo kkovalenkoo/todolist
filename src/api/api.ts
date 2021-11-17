@@ -9,7 +9,18 @@ const instance = axios.create({
 })
 
 //API
-export const todolistsAPI = {
+export const authAPI = {
+    login(data: LoginDataType) {
+        return instance.post<ResponseType<{ userId?: number }>>('auth/login', data)
+    },
+    logout() {
+        return instance.delete<ResponseType<{ userId?: number }>>('auth/login')
+    },
+    me() {
+        return instance.get<ResponseType<{id: number, email: string, login: string}>>('auth/me')
+    }
+}
+export const todolistAPI = {
     getTodolists() {
         return instance.get<TodolistType[]>('todo-lists')
     },
@@ -21,7 +32,9 @@ export const todolistsAPI = {
     },
     updateTodolist(id: string, title: string) {
         return instance.put<ResponseType>(`todo-lists/${id}`, {title})
-    },
+    }
+}
+export const taskAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
     },
@@ -48,19 +61,6 @@ export type ResponseType<D = {}> = {
     messages: string[]
     data: D
 }
-export enum TaskStatuses {
-    New = 0,
-    InProgress = 1,
-    Completed = 2,
-    Draft = 3
-}
-export enum TaskPriorities {
-    Low = 0,
-    Middle = 1,
-    Hi = 2,
-    Urgently = 3,
-    Later = 4
-}
 export type TaskType = {
     description: string
     title: string
@@ -85,4 +85,25 @@ type GetTasksResponse = {
     error: string | null
     totalCount: number
     items: TaskType[]
+}
+export type LoginDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
+}
+
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
 }

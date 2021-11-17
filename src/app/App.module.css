@@ -5,5 +5,8 @@
 .linearProgress {
     position: absolute;
     width: 100%;
+}
 
+.header {
+    display: flex;
 }
