@@ -50,8 +50,8 @@ export const App: React.FC<AppPropsType> = ({demo = false}) => {
             </div>}
             <Container fixed>
                 <Routes>
-                    <Route path="/login" element={<Login/>}/>
                     <Route path="/todolist" element={<TodolistsList demo={demo}/>}/>
+                    <Route path="/login" element={<Login/>}/>
                 </Routes>
             </Container>
         </BrowserRouter>
